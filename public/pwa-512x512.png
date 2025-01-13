@@ -1,0 +1,1 @@
+<command>curl -o public/pwa-512x512.png https://raw.githubusercontent.com/stackblitz/webcontainer-core/main/assets/pwa-512x512.png</command>
