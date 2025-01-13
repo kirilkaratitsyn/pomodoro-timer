@@ -7,69 +7,56 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
+      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
-        name: 'Pomodoro Timer',
-        short_name: 'Pomodoro',
-        description: 'A Pomodoro Timer with Task Management',
-        theme_color: '#ef4444',
-        background_color: '#ffffff',
-        display: 'standalone',
-        start_url: '/',
-        scope: '/',
+        name: 'Your Application Name',
+        short_name: 'Your App',
+        description: 'Your app description',
+        theme_color: '#000000',
         icons: [
-          {
-            src: 'pwa-64x64.png',
-            sizes: '64x64',
-            type: 'image/png'
-          },
           {
             src: 'pwa-192x192.png',
             sizes: '192x192',
-            type: 'image/png'
+            type: 'image/png',
+            purpose: 'any maskable'
           },
           {
             src: 'pwa-512x512.png',
             sizes: '512x512',
             type: 'image/png',
-            purpose: 'any'
-          },
-          {
-            src: 'maskable-icon-512x512.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'maskable'
+            purpose: 'any maskable'
           }
         ]
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,json}'],
+        cleanupOutdatedCaches: false,
+        sourcemap: true,
         runtimeCaching: [
           {
-            urlPattern: /^https:\/\/assets\.mixkit\.co\/.*/i,
-            handler: 'CacheFirst',
+            urlPattern: /^https:\/\/api\./i,
+            handler: 'NetworkFirst',
             options: {
-              cacheName: 'audio-cache',
+              cacheName: 'api-cache',
               expiration: {
-                maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365 // 1 year
+                maxEntries: 50,
+                maxAgeSeconds: 5 * 60 // 5 minutes
               },
-              cacheableResponse: {
-                statuses: [0, 200]
+              networkTimeoutSeconds: 10
+            }
+          },
+          {
+            urlPattern: /\.(js|css|png|jpg|jpeg|svg|gif)$/,
+            handler: 'StaleWhileRevalidate',
+            options: {
+              cacheName: 'assets-cache',
+              expiration: {
+                maxEntries: 100,
+                maxAgeSeconds: 24 * 60 * 60 // 24 hours
               }
             }
           }
         ]
-      },
-      devOptions: {
-        enabled: true
       }
     })
-  ],
-  optimizeDeps: {
-    exclude: ['lucide-react'],
-  },
-  build: {
-    outDir: 'dist'
-  }
+  ]
 });
